@@ -148,7 +148,7 @@ varies across different machines and the transfer is dependent on ip addresses
 of the client and server. So it is difficult to automate when the ip address
 keeps changing.
 
-A good alternative is `mosh`[12] which operates over UDP, uses `ssh` to
+A good alternative is [mosh][12] which operates over UDP, uses `ssh` to
 authenticate and allows a much smoother operation in remote shells.
 
 [1]: https://clonezilla.org/
