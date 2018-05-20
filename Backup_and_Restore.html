@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Portable Work Environment</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="header">
+<h1 class="title">Portable Work Environment</h1>
+</div>
+<div id="TOC">
+<ul>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#backup">Backup</a></li>
+<li><a href="#bare-metal-backup">Bare Metal Backup</a></li>
+<li><a href="#full-system-backup-aka-tarballs">Full System Backup (aka tarballs)</a></li>
+<li><a href="#data-backup-rsync-and-rsnapshot">Data Backup (Rsync and Rsnapshot)</a></li>
+<li><a href="#virtualization">Virtualization</a></li>
+<li><a href="#network-protocols">Network Protocols</a></li>
+</ul>
+</div>
+<div id="purpose" class="section level2">
+<h2><a href="#purpose">Purpose</a></h2>
+<p>The purpose here is to create a snapshot of a work environment in one computer and restore it in different computers with minimum configuration. This is useful when the main computer is offline, corrupted or crashed. The options below are some of the things one can do with available and new tools.</p>
+</div>
+<div id="backup" class="section level2">
+<h2><a href="#backup">Backup</a></h2>
+<p>A full backup of the system is of course a no-brainer. But the questions that trouble beginners and even experts are as follows</p>
+<ol style="list-style-type: lower-alpha">
+<li>When and how often to perform backup?</li>
+<li>How can this be automated?</li>
+<li>How much the process should be automated (full vs partial vs manual backups, full automation may not be desired in many cases)</li>
+<li>How to perform intelligent backups - that preserves both important data and at the same time saves space?</li>
+<li>What are the best tools for backup?</li>
+</ol>
+<p>Backups can be done at various levels. We will start with the most detailed and then more smarter options that can save space while maintaining data integrity</p>
+</div>
+<div id="bare-metal-backup" class="section level2">
+<h2><a href="#bare-metal-backup">Bare Metal Backup</a></h2>
+<p>This is done through tools like <a href="https://clonezilla.org/">Clonezilla</a> which allows one to backup a hard drive block by block.</p>
+<p>Pros:</p>
+<ul>
+<li>Safest option, backs up whole partitions which can be restored to their previous state</li>
+<li>Works with any OS (for example Windows)</li>
+<li>Offers an integrity test of both source and destination during backup which can be fixed</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>Time consuming full backup can take anywhere from 2-10 hours</li>
+<li>Space grabbing, does not support incremental backups so each backup takes the same time as before</li>
+<li>Not completely beginner level requires knowledge of partitions and disk checking (the manual is helpful)</li>
+</ul>
+</div>
+<div id="full-system-backup-aka-tarballs" class="section level2">
+<h2><a href="#full-system-backup-aka-tarballs">Full System Backup (aka tarballs)</a></h2>
+<p>Since in Unix <a href="https://en.wikipedia.org/wiki/Everything_is_a_file">everything is a file</a> so backups should be as easy as just tarballing the whole root directory. However this is not often that straightforward. Special things to consider are of course the boot leader and the system specific details (if restored on a different computer). This <a href="https://ubuntuforums.org/printthread.php?t=35087&amp;pp=10&amp;page=1">link</a> provides an excellent guide on how to do this. The essential command can be summarized as below.</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">sudo</span> tar czf /backup.tar.gz --exclude=/backup.tar.gz --exclude=/home \
+<span class="kw">--exclude</span>=/media --exclude=/dev --exclude=/mnt --exclude=/proc --exclude=/sys \
+<span class="kw">--exclude</span>=/tmp / </code></pre>
+<p>More/less <code>--exclude</code> options can be chosen if necessary. To install bootloader one can use the set of commands below (described <a href="https://askubuntu.com/questions/6317/how-can-i-install-windows-after-ive-installed-ubuntu/6321#6321">here</a>) from a live PC (usb or cd).</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co">#If there is no separate boot partition</span>
+<span class="kw">sudo</span> mount /dev/DEVICENAME_FROM_STEP_ONE /mnt
+<span class="kw">sudo</span> rm -rf /boot    <span class="co"># Careful here, make sure YOU ARE USING THE LIVE CD. I tried it, it works.</span>
+<span class="kw">sudo</span> ln -s /mnt/boot /boot
+<span class="co">#If there is a separate boot partition</span>
+<span class="kw">sudo</span> mount /dev/DEVICENAME_FROM_STEP_ONE /boot
+<span class="co">#Install boot loader</span>
+<span class="kw">sudo</span> apt-get update
+<span class="kw">sudo</span> apt-get install grub-pc
+<span class="kw">sudo</span> grub-install /dev/sda     <span class="co"># NOTE THAT THERE IS NO DIGIT</span>
+<span class="kw">sudo</span> umount /boot</code></pre>
+</div>
+<div id="data-backup-rsync-and-rsnapshot" class="section level2">
+<h2><a href="#data-backup-rsync-and-rsnapshot">Data Backup (Rsync and Rsnapshot)</a></h2>
+<p>The best available tool to reliably backup data in a unix system is rsync. It is incredibly powerful, intelligent and works across a variety of platforms. The pros and cons are as below</p>
+<p>Pros</p>
+<ul>
+<li>Incremental backup so each time <code>rsync</code> knows exactly how much to backup from source to destination</li>
+<li>Copies file based on their timestamps so a file will only be overwritten if it is the newer version in the source</li>
+<li>Works across everything and by that I mean EVERYTHING internal and external local devices, across networks in different servers</li>
+<li>Highly configurable through various options</li>
+</ul>
+<p>Cons</p>
+<ul>
+<li>Too many options often overwhelming to a beginner</li>
+<li>The commonly used option <code>-a</code> may not be what you want in certain cases especially when dealing with sources and destinations with different permissions</li>
+<li>Dependence on ssh could be a handicap when transferring file across network (explained later)</li>
+</ul>
+<p><a href="http://rsnapshot.org/">Rsnapshot</a> allows one to automate backups using rsync and crontabs. In particular one can configure which locations to sync and how often. More details are available on the website. This tool is based on this <a href="http://www.mikerubel.org/computers/rsync_snapshots/">blog</a></p>
+</div>
+<div id="virtualization" class="section level2">
+<h2><a href="#virtualization">Virtualization</a></h2>
+<p>PC virtualization offers another way of creating easy and portable work environments which can be used in different platforms. Some examples of tools offering virtualization are <a href="https://www.virtualbox.org/">Virtual Box</a>, <a href="https://www.vagrantup.com/">Vagrant</a> and <a href="https://www.vmware.com/">Vmware</a></p>
+<p>Pros</p>
+<ul>
+<li>Allows to create an isolated environment tailored for specific projects with both os and application specific configurations</li>
+<li>Very useful in collaboratio, software testing and creating tutorials for applications to ensure everyone is using the same environment</li>
+<li>Backups can be made instantly and when necessary</li>
+</ul>
+<p>Cons</p>
+<ul>
+<li>Not every PC supports virtualization</li>
+<li>Can be put a significant strain on system resources</li>
+<li>Not suitable for high performance computation</li>
+</ul>
+<p>More lightweight applications such as <a href="https://www.docker.com/">docker</a> and system specific virtual environments such as <a href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> in python may be more suited to many applications.</p>
+</div>
+<div id="network-protocols" class="section level2">
+<h2><a href="#network-protocols">Network Protocols</a></h2>
+<p><code>ssh</code> is the de facto standard when it comes to transferring files securely between different machines over the network. Utilities like <code>rsync</code> uses ssh for file transfer over a network. However the ssh server and client configuration varies across different machines and the transfer is dependent on ip addresses of the client and server. So it is difficult to automate when the ip address keeps changing.</p>
+<p>A good alternative is <code>mosh</code><a href="https://mosh.org/">12</a> which operates over UDP, uses <code>ssh</code> to authenticate and allows a much smoother operation in remote shells.</p>
+</div>
+</body>
+</html>
