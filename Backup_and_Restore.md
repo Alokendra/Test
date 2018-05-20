@@ -29,7 +29,7 @@ Backups can be done at various levels. We will start with the
 most detailed and then more smarter options that can save space while
 maintaining data integrity
 
-## Bare Metal Backup
+### Bare Metal Backup
 
 This is done through tools like
 [Clonezilla][1] which allows one to backup a hard drive
@@ -51,7 +51,7 @@ same time as before
 - Not completely beginner level requires knowledge of partitions and disk
 checking (the manual is helpful)
 
-## Full System Backup (aka tarballs)
+### Full System Backup (aka tarballs)
 
 Since in Unix [everything is a file][2] so backups should be
 as easy as just tarballing the whole root directory. However this is not often
@@ -84,7 +84,7 @@ sudo grub-install /dev/sda     # NOTE THAT THERE IS NO DIGIT
 sudo umount /boot
 ~~~
 
-## Data Backup (Rsync and Rsnapshot)
+### Data Backup (Rsync and Rsnapshot)
 
 The best available tool to reliably backup data in a unix system is rsync. It is
 incredibly powerful, intelligent and works across a variety of platforms. The

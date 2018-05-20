@@ -34,10 +34,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="TOC">
 <ul>
 <li><a href="#purpose">Purpose</a></li>
-<li><a href="#backup">Backup</a></li>
+<li><a href="#backup">Backup</a><ul>
 <li><a href="#bare-metal-backup">Bare Metal Backup</a></li>
 <li><a href="#full-system-backup-aka-tarballs">Full System Backup (aka tarballs)</a></li>
 <li><a href="#data-backup-rsync-and-rsnapshot">Data Backup (Rsync and Rsnapshot)</a></li>
+</ul></li>
 <li><a href="#virtualization">Virtualization</a></li>
 <li><a href="#network-protocols">Network Protocols</a></li>
 </ul>
@@ -57,9 +58,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>What are the best tools for backup?</li>
 </ol>
 <p>Backups can be done at various levels. We will start with the most detailed and then more smarter options that can save space while maintaining data integrity</p>
-</div>
-<div id="bare-metal-backup" class="section level2">
-<h2><a href="#bare-metal-backup">Bare Metal Backup</a></h2>
+<div id="bare-metal-backup" class="section level3">
+<h3><a href="#bare-metal-backup">Bare Metal Backup</a></h3>
 <p>This is done through tools like <a href="https://clonezilla.org/">Clonezilla</a> which allows one to backup a hard drive block by block.</p>
 <p>Pros:</p>
 <ul>
@@ -74,8 +74,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>Not completely beginner level requires knowledge of partitions and disk checking (the manual is helpful)</li>
 </ul>
 </div>
-<div id="full-system-backup-aka-tarballs" class="section level2">
-<h2><a href="#full-system-backup-aka-tarballs">Full System Backup (aka tarballs)</a></h2>
+<div id="full-system-backup-aka-tarballs" class="section level3">
+<h3><a href="#full-system-backup-aka-tarballs">Full System Backup (aka tarballs)</a></h3>
 <p>Since in Unix <a href="https://en.wikipedia.org/wiki/Everything_is_a_file">everything is a file</a> so backups should be as easy as just tarballing the whole root directory. However this is not often that straightforward. Special things to consider are of course the boot leader and the system specific details (if restored on a different computer). This <a href="https://ubuntuforums.org/printthread.php?t=35087&amp;pp=10&amp;page=1">link</a> provides an excellent guide on how to do this. The essential command can be summarized as below.</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">sudo</span> tar czf /backup.tar.gz --exclude=/backup.tar.gz --exclude=/home \
 <span class="kw">--exclude</span>=/media --exclude=/dev --exclude=/mnt --exclude=/proc --exclude=/sys \
@@ -93,8 +93,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <span class="kw">sudo</span> grub-install /dev/sda     <span class="co"># NOTE THAT THERE IS NO DIGIT</span>
 <span class="kw">sudo</span> umount /boot</code></pre>
 </div>
-<div id="data-backup-rsync-and-rsnapshot" class="section level2">
-<h2><a href="#data-backup-rsync-and-rsnapshot">Data Backup (Rsync and Rsnapshot)</a></h2>
+<div id="data-backup-rsync-and-rsnapshot" class="section level3">
+<h3><a href="#data-backup-rsync-and-rsnapshot">Data Backup (Rsync and Rsnapshot)</a></h3>
 <p>The best available tool to reliably backup data in a unix system is rsync. It is incredibly powerful, intelligent and works across a variety of platforms. The pros and cons are as below</p>
 <p>Pros</p>
 <ul>
@@ -110,6 +110,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>Dependence on ssh could be a handicap when transferring file across network (explained later)</li>
 </ul>
 <p><a href="http://rsnapshot.org/">Rsnapshot</a> allows one to automate backups using rsync and crontabs. In particular one can configure which locations to sync and how often. More details are available on the website. This tool is based on this <a href="http://www.mikerubel.org/computers/rsync_snapshots/">blog</a></p>
+</div>
 </div>
 <div id="virtualization" class="section level2">
 <h2><a href="#virtualization">Virtualization</a></h2>
