@@ -41,6 +41,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 <li><a href="#virtualization">Virtualization</a></li>
 <li><a href="#network-protocols">Network Protocols</a></li>
+<li><a href="#version-control">Version Control</a></li>
 </ul>
 </div>
 <div id="purpose" class="section level2">
@@ -49,11 +50,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </div>
 <div id="backup" class="section level2">
 <h2><a href="#backup">Backup</a></h2>
-<p>A full backup of the system is of course a no-brainer. But the questions that trouble beginners and even experts are as follows</p>
+<p>A full backup of the system is of course a no-brainer. But there are many questions that trouble beginners and even experts:</p>
 <ol style="list-style-type: lower-alpha">
 <li>When and how often to perform backup?</li>
 <li>How can this be automated?</li>
-<li>How much the process should be automated (full vs partial vs manual backups, full automation may not be desired in many cases)</li>
+<li>How much of the process should be automated (full vs partial vs manual backups, full automation may not be desired in many cases)</li>
 <li>How to perform intelligent backups - that preserves both important data and at the same time saves space?</li>
 <li>What are the best tools for backup?</li>
 </ol>
@@ -133,6 +134,23 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h2><a href="#network-protocols">Network Protocols</a></h2>
 <p><code>ssh</code> is the de facto standard when it comes to transferring files securely between different machines over the network. Utilities like <code>rsync</code> uses ssh for file transfer over a network. However the ssh server and client configuration varies across different machines and the transfer is dependent on ip addresses of the client and server. So it is difficult to automate when the ip address keeps changing.</p>
 <p>A good alternative is <a href="https://mosh.org/">mosh</a> which operates over UDP, uses <code>ssh</code> to authenticate and allows a much smoother operation in remote shells.</p>
+</div>
+<div id="version-control" class="section level2">
+<h2><a href="#version-control">Version Control</a></h2>
+<p>For structured text such as program source code, of course version control systems are an automatic choice because of the sheer flexibility they offer particularly in a collaborative environment. Here we have the choice of central vs distributed version control systems. The latter is preferred almost always except for some rare use cases. Even then most distributed version control systems such as <code>git</code> can be configured as a centralized version control system. The two main choices in this area are <a href="https://git-scm.com/">git</a> and <a href="https://www.mercurial-scm.org/">mercurial</a>. Both offers quite similar set of features although <code>git</code> is more widely used.</p>
+<p>Pros</p>
+<ul>
+<li>Ability to trivially track changes made in a project by multiple users</li>
+<li>Allows multiple users to work on different aspects of the project at the same time and easy merging</li>
+<li>Allows one to work on multiple branches of a project, discard one or more and merge them together</li>
+<li>Data integrity verified with SHA1 checksums</li>
+<li>Respects unix everything is a file(text) philosophy and hence whole repositories can be easily cloned and backed up using tools like <code>rsync</code></li>
+</ul>
+<p>Cons</p>
+<ul>
+<li>Only works well for source code or any other structured text format should never be used with other forms like binary or xml</li>
+<li>More focussed towards structure rather than behavior of applications</li>
+</ul>
 </div>
 </body>
 </html>

@@ -14,12 +14,12 @@ the things one can do with available and new tools.
 
 ## Backup
 
-A full backup of the system is of course a no-brainer. But the
-questions that trouble beginners and even experts are as follows
+A full backup of the system is of course a no-brainer. But there
+are many questions that trouble beginners and even experts:
 
 a) When and how often to perform backup?
 b) How can this be automated?
-c) How much the process should be automated (full vs partial vs
+c) How much of the process should be automated (full vs partial vs
 manual backups, full automation may not be desired in many cases)
 d) How to perform intelligent backups - that preserves both
 important data and at the same time saves space?
@@ -151,6 +151,39 @@ keeps changing.
 A good alternative is [mosh][12] which operates over UDP, uses `ssh` to
 authenticate and allows a much smoother operation in remote shells.
 
+## Version Control
+
+For structured text such as program source code, of course
+version control systems are an automatic choice because of the
+sheer flexibility they offer particularly in a collaborative
+environment. Here we have the choice of central vs distributed
+version control systems. The latter is preferred almost always
+except for some rare use cases. Even then most distributed
+version control systems such as `git` can be configured as a
+centralized version control system. The two main choices in this
+area are [git][13] and [mercurial][14]. Both offers quite similar
+set of features although `git` is more widely used.
+
+Pros
+
+- Ability to trivially track changes made in a project by
+multiple users
+- Allows multiple users to work on different aspects of the
+project at the same time and easy merging
+- Allows one to work on multiple branches of a project, discard
+one or more and merge them together
+- Data integrity verified with SHA1 checksums
+- Respects unix everything is a file(text) philosophy and hence
+whole repositories can be easily cloned and backed up using
+tools like `rsync`
+
+Cons
+
+- Only works well for source code or any other structured text
+  format should never be used with other forms like binary or xml
+- More focussed towards structure rather than behavior of
+  applications
+
 [1]: https://clonezilla.org/
 [2]: https://en.wikipedia.org/wiki/Everything_is_a_file
 [3]: https://ubuntuforums.org/printthread.php?t=35087&pp=10&page=1
@@ -163,3 +196,5 @@ authenticate and allows a much smoother operation in remote shells.
 [10]: https://www.docker.com/
 [11]: https://virtualenv.pypa.io/en/stable/
 [12]: https://mosh.org/
+[13]: https://git-scm.com/
+[14]: https://www.mercurial-scm.org/
