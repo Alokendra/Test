@@ -2,5 +2,12 @@
 
 import os
 
+def add(x,y):
+  """
+  Adds two numbers
+  """
+  return x + y
+
 print os.getcwd()
 print "Hello World"
+print add(3 + 4)
