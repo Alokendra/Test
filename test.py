@@ -12,7 +12,11 @@ def subtract(x,y):
   """
   Subtracts two numbers
   """
-  return x - y
+  try:
+    z = x - y
+    return z
+  except TypeError:
+    print "Arguments must be numbers"
 
 print os.getcwd()
 print "Hello World"
